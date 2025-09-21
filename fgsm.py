@@ -24,6 +24,7 @@ eps = epsReal - 1e-7 # small constant to offset floating-point erros
 
 # The network N classfies x as belonging to class 2
 original_class = N(x).argmax(dim=1).item()  # TO LEARN: make sure you understand this expression
+print("Original Input: ", x)
 print("Original Class: ", original_class)
 assert(original_class == 2)
 
@@ -36,11 +37,57 @@ loss.backward()
 # your code here
 # adv_x should be computed from x according to the fgsm-style perturbation such that the new class of xBar is the target class t above
 # hint: you can compute the gradient of the loss w.r.t to x as x.grad
-adv_x = TODO
+adv_x = x - eps * x.grad.sign()
 
 new_class = N(adv_x).argmax(dim=1).item()
-print("New Class: ", new_class)
+print("Adversarial Example: ", adv_x)
+print("Adversarial Class: ", new_class)
 assert(new_class == t)
 # it is not enough that adv_x is classified as t. We also need to make sure it is 'close' to the original x. 
 print(torch.norm((x-adv_x),  p=float('inf')).data)
 assert( torch.norm((x-adv_x), p=float('inf')) <= epsReal)
+
+# Part 2
+
+t = 1 # target class
+
+epsReal = 0.85 #depending on your data this might be large or small
+eps = epsReal - 1e-7 # small constant to offset floating-point erros
+
+original_class = N(x).argmax(dim=1).item() # TO LEARN: make sure you understand this expression
+print("Original Input: ", x)
+print("Original Class: ", original_class)
+assert(original_class == 2)
+
+# targeted iterative FGSM
+alpha = 0.25
+iterations = 10
+
+L = nn.CrossEntropyLoss()
+
+adv_x = x.clone().detach()
+
+for iteration in range(iterations):
+    adv_x.requires_grad_(True)
+    N.zero_grad()
+    loss = L(N(adv_x), torch.tensor([t], dtype=torch.long))
+    loss.backward()
+    with torch.no_grad():
+        adv_x = adv_x - (alpha * adv_x.grad.sign())
+        delta = adv_x - x
+        delta = torch.clamp(delta, -eps, eps) # clamp to eps ball
+        adv_x = x + delta
+        new_class = N(adv_x).argmax(dim=1).item()
+        distance = torch.norm((x-adv_x), p=float('inf')).data
+        print(f"Iteration {iteration}: Distance {distance}")
+        if new_class == t:
+            print("Attack successful")
+            break
+
+assert(new_class == t)
+assert(torch.norm((x-adv_x), p=float('inf')) <= epsReal)
+
+new_class = N(adv_x).argmax(dim=1).item()
+print("Adversarial Example: ", adv_x)
+print("New Class: ", new_class)
+print("Found in iteration: ", iteration)
