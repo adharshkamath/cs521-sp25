@@ -1,0 +1,66 @@
+% initialize latex document for CS521 class assignment
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{fancyvrb}   % for verbatim code blocks
+\usepackage{geometry}
+\geometry{margin=1in}
+\usepackage{caption}
+\captionsetup{font=small, labelfont=bf}
+\usepackage{enumitem}
+\setlist[itemize]{left=0pt, labelsep=0.5em, itemsep=0.5em}
+\setlist[enumerate]{left=0pt, labelsep=0.5em, itemsep=0.5em}
+\usepackage{tcolorbox}
+\tcbuselibrary{listingsutf8}
+\newtcblisting{pythoncode}{
+  listing only,
+  colback=white,
+  colframe=black,
+  listing options={language=Python, basicstyle=\ttfamily\footnotesize, breaklines=true, tabsize=4},
+  left=0pt,
+  right=0pt,
+  top=0pt,
+  bottom=0pt,
+  boxsep=5pt,
+  arc=0pt,
+  outer arc=0pt,
+  boxrule=0.5pt,
+  width=\textwidth,
+  before skip=10pt,
+  after skip=10pt
+}
+\title{CS 521: Trustworthy AI Systems \\ MP1}
+\author{Adharsh Kamath Raghupathi (netID: ak128)}
+\date{}
+\begin{document}
+\maketitle
+\section*{Problem 1:}
+\subsection*{Part (1)}
+Given the original input x, the target class t, and the perturbation magnitude eps, we can compute FGSM adversary as follows:
+\begin{verbatim}
+adv_x = x - eps * x.grad.sign()
+print("Adversarial Example: ", adv_x)
+\end{verbatim}
+With this snippet (in the file \href{URL}{text}), we can see the following output:
+\begin{verbatim}
+Original Input:  tensor([[0.6584, 0.8175, 0.1262, 0.0541, 0.2268, 0.8405, 0.5393, 0.9798, 0.8597,
+         0.5977]], requires_grad=True)
+Original Class:  2
+Adversarial Example:  tensor([[ 0.1584,  1.3175,  0.6262, -0.4459,  0.7268,  0.3405,  0.0393,  0.4798,
+          1.3597,  0.0977]], grad_fn=<SubBackward0>)
+Adversarial Class:  0
+tensor(0.5000)
+\end{verbatim}
+\subsection*{Part (2)}
+
+\section*{Problem 2:}
+
+\section*{Problem 3:}
+
+
+
+\end{document}
